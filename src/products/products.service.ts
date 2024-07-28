@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { PaginationDto } from 'src/common';
 
 @Injectable()
 export class ProductsService extends PrismaClient implements OnModuleInit {
@@ -19,10 +20,25 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
     });
   }
 
-  findAll() {
-    return this.product.findMany({
-      take: 10,
+  async findAll(paginationDto: PaginationDto) {
+    const { limit, page } = paginationDto;
+
+    const totalProducts = await this.product.count();
+    const lastPage = Math.ceil(totalProducts / limit);
+
+    const products = await this.product.findMany({
+      take: limit,
+      skip: (page - 1) * limit,
     });
+
+    return {
+      data: products,
+      meta: {
+        total: totalProducts,
+        page: page,
+        lastPage: lastPage,
+      },
+    };
   }
 
   findOne(id: number) {
