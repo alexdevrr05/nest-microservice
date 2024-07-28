@@ -20,11 +20,15 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
   }
 
   findAll() {
-    return `This action returns all products`;
+    return this.product.findMany({
+      take: 10,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} product`;
+    return this.product.findFirst({
+      where: { id },
+    });
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
