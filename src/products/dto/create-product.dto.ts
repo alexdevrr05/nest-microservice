@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsString, Min } from 'class-validator';
+import { IsNumber, IsString, Min } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
